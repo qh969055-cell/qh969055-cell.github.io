@@ -2093,7 +2093,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// Integrated male excuse branch controller.
+// Integrated excuse branch controller.
 document.addEventListener("DOMContentLoaded", () => {
   const excuseScene = document.getElementById("excuseScene");
   const hudTimerCard = document.getElementById("hudTimerCard");
@@ -2274,11 +2274,10 @@ document.addEventListener("DOMContentLoaded", () => {
   let lastFrameTime = 0;
   let transitionTimers = [];
 
-  // 兩階段狡辯題目與對話腳本（對應圖一 killer 與圖二 weapon）
-  const rounds = [
+  // 四題為共用題庫，每次狡辯從中隨機抽取兩題。
+  const originalRounds = [
     {
       word: "killer",
-      label: "第 1 題狡辯（限時 5 秒打出 killer）",
       dialogues: [
         { side: "left", text: "我親愛的教徒。" },
         { side: "left", text: "您確定對我沒有任何隱瞞？" },
@@ -2290,7 +2289,6 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     {
       word: "weapon",
-      label: "第 2 題狡辯（限時 5 秒打出 weapon）",
       dialogues: [
         {
           side: "left",
@@ -2310,6 +2308,54 @@ document.addEventListener("DOMContentLoaded", () => {
       ],
     },
   ];
+  const additionalRounds = [
+    {
+      word: "corpse",
+      dialogues: [
+        { side: "left", text: "那麼地窖裡的氣味該怎麼解釋？" },
+        { side: "left", text: "有人看見你深夜獨自進出。" },
+        { side: "left", text: "那具屍體究竟是怎麼回事？" },
+        { side: "center", text: "神父，您誤會了！" },
+        { side: "center", text: "我只是去整理陳年的酒桶。" },
+        { side: "center", text: "根本沒有您說的任何屍體。" },
+        { side: "left", text: "在主面前，謊言無所遁形。", separated: true },
+        {
+          side: "center",
+          text: "請相信我，那只是腐壞的木屑味！",
+          separated: true,
+        },
+      ],
+    },
+    {
+      word: "enigma",
+      dialogues: [
+        {
+          side: "left",
+          text: "你的說辭處處充滿矛盾的謎團。",
+          replaceSeparated: true,
+        },
+        {
+          side: "center",
+          text: "一切都只是巧合，我對主發誓！",
+          replaceSeparated: true,
+        },
+      ],
+    },
+  ];
+  const availableRounds = [...originalRounds, ...additionalRounds];
+  let rounds = [];
+
+  function chooseRandomRounds() {
+    const shuffledRounds = [...availableRounds];
+    for (let index = shuffledRounds.length - 1; index > 0; index -= 1) {
+      const randomIndex = Math.floor(Math.random() * (index + 1));
+      [shuffledRounds[index], shuffledRounds[randomIndex]] = [
+        shuffledRounds[randomIndex],
+        shuffledRounds[index],
+      ];
+    }
+    return shuffledRounds.slice(0, 2);
+  }
 
   function clearTransitionTimers() {
     transitionTimers.forEach((id) => clearTimeout(id));
@@ -2428,14 +2474,21 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!container) return;
 
     let bubbleEl = null;
+    if (item.replaceSeparated) {
+      const separatedClass = isLeft ? "is-left-separated" : "is-separated";
+      bubbleEl = container.querySelector(`.speech-bubble.${separatedClass}`);
+    }
     if (item.replaceBottom) {
-      bubbleEl = container.querySelector(".speech-bubble.is-separated");
+      bubbleEl =
+        bubbleEl || container.querySelector(".speech-bubble.is-separated");
     }
 
     if (!bubbleEl) {
       bubbleEl = document.createElement("div");
       bubbleEl.className = `speech-bubble ${isLeft ? "is-left" : "is-right"}`;
-      if (item.separated) bubbleEl.classList.add("is-separated");
+      if (item.separated) {
+        bubbleEl.classList.add(isLeft ? "is-left-separated" : "is-separated");
+      }
       if (item.leftSeparated) bubbleEl.classList.add("is-left-separated");
 
       const textSpan = document.createElement("span");
@@ -2530,7 +2583,9 @@ document.addEventListener("DOMContentLoaded", () => {
       excuseTypingBox.classList.add("is-active-round");
     }
     if (typingStatusBadge) {
-      typingStatusBadge.textContent = `${roundData.label} — 請直接用鍵盤輸入字母！`;
+      typingStatusBadge.textContent =
+        `第 ${roundIdx + 1} 題狡辯（限時 5 秒打出 ${activeWord}）` +
+        " — 請直接用鍵盤輸入字母！";
     }
 
     startCountdown();
@@ -2567,7 +2622,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // 本題單字全部打出
         stopCountdown();
         if (currentRoundIndex < rounds.length - 1) {
-          // 進入下一題狡辯對話與第 2 題（weapon）
+          // 進入下一題狡辯對話。
           phase = "transition";
           playTone(659.25, 0.25, "triangle", 0.18, 1.12);
           showFeedbackBanner("完美通過，準備下一句狡辯！", true);
@@ -2727,14 +2782,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.addEventListener("startExcuseBranch", () => {
     const selectedGender = excuseScene.getAttribute("data-gender") || "male";
+    const isFemaleCharacter = selectedGender === "female";
+    rounds = chooseRandomRounds();
     if (excuseScene) {
       excuseScene.classList.add("is-active");
       excuseScene.classList.remove("is-miss-flash");
     }
     if (excuseCharacterImg) {
-      const isFemaleCharacter = selectedGender === "female";
       excuseCharacterImg.src = isFemaleCharacter
-        ? "./狡辯環節(女生）/images/IMG_9028 1.svg"
+        ? "./狡辯環節_女生/images/IMG_9028 1.svg"
         : "./images/PC_B/PC_talk.PNG";
       excuseCharacterImg.alt = isFemaleCharacter ? "女角色神情" : "男角色神情";
     }
