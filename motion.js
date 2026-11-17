@@ -803,11 +803,11 @@ document.addEventListener("DOMContentLoaded", () => {
       startGameBtn.classList.add("is-pressed");
       saveSelectedGender(selectedGender);
       console.log("正式開始遊戲，已選性別：", selectedGender);
-      // 從第六頁進入第七頁 
+      // 從第六頁進入第七頁
       enterQuestionScene();
     });
   }
-  
+
   // 題目互動：快取頁面節點，並共用樣板建立記分板與心跳畫面的燭火。
 
   // 第七頁的整體場景
@@ -1284,10 +1284,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!hasTriggeredRhythmEvent && extinguishedCandleCount === 2) {
         hasTriggeredRhythmEvent = true;
         startRhythmAfterAnswer = true;
-      } else if (
-        !hasTriggeredExcuseEvent &&
-        extinguishedCandleCount === 5
-      ) {
+      } else if (!hasTriggeredExcuseEvent && extinguishedCandleCount === 5) {
         startExcuseAfterAnswer = true;
       }
     }
@@ -1365,7 +1362,6 @@ document.addEventListener("DOMContentLoaded", () => {
       renderQuestion();
     });
   }
-
 });
 
 // 心跳檢定：控制對話、音效、節奏判定、燭火結果與角色素材。
@@ -1373,7 +1369,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const rhythmScene = document.getElementById("rhythmScene");
   const rhythmDialogueText = document.getElementById("rhythmDialogueText");
   const dialogueNextHint = document.getElementById("dialogueNextHint");
-  
+
   const rhythmTrackArea = document.getElementById("rhythmTrackArea");
   const rhythmWaveLabel = document.getElementById("rhythmWaveLabel");
   const rhythmWavePips = document.getElementById("rhythmWavePips");
@@ -1410,10 +1406,8 @@ document.addEventListener("DOMContentLoaded", () => {
     rhythmCandlesWrap.style.height = `${imageHeight}px`;
     rhythmCandlesWrap.style.transformOrigin = "top left";
     rhythmCandlesWrap.style.transform = `scale(${scale})`;
-    rhythmCandlesWrap.style.left =
-      `${boxRect.left - boxRect.width * leftDripRight * scale}px`;
-    rhythmCandlesWrap.style.top =
-      `${boxRect.top - imageHeight * holderBottom * scale}px`;
+    rhythmCandlesWrap.style.left = `${boxRect.left - boxRect.width * leftDripRight * scale}px`;
+    rhythmCandlesWrap.style.top = `${boxRect.top - imageHeight * holderBottom * scale}px`;
   }
 
   window.addEventListener("resize", alignRhythmCandlesWithInstructionBox);
