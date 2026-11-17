@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>告解室</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <!-- 第一頁：開場動畫頁面 -->
+    <main class="stage intro-scene is-active" id="introScene">
+        <div class="scene">
+            <!-- 第一層（背景）：告解室線條描繪，隨後淡出退為背景 -->
+            <svg class="svg-draw-logo" id="logoSvg" viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg"
+                aria-label="告解室">
+                <!-- 告 -->
+                <path class="draw-path" d="M41 30 H78 V240 H41 Z" />
+                <path class="draw-path" d="M115 2 H157 V272 H115 Z" />
+                <path class="draw-path" d="M78 102 H217 V118 H78 Z" />
+                <path class="draw-path" d="M0 272 H272 V289 H0 Z" />
+                <path class="draw-path" fill-rule="evenodd"
+                    d="M54 365 H182 C205 365 216 371 216 382 L219 619 H174 V608 H97 V619 H54 Z M96 382 H177 L175 593 H97 Z" />
+
+                <!-- 解 -->
+                <path class="draw-path" d="M380 9 H414 V168 H380 Z" />
+                <path class="draw-path" d="M414 60 H460 C475 60 481 66 479 75 L455 244 H424 L451 73 H414 Z" />
+                <path class="draw-path" fill-rule="evenodd"
+                    d="M369 229 H402 V244 H478 C498 244 505 251 505 262 L508 606 C508 614 495 618 475 618 H450 V606 H472 L474 429 H404 L405 618 H366 Z M402 256 H423 V329 H402 Z M453 256 H474 V329 H453 Z M403 342 H423 V416 H403 Z M453 342 H474 V416 H453 Z" />
+                <path class="draw-path"
+                    d="M505 9 H596 C618 9 625 16 625 26 L626 164 C626 172 616 176 600 176 H579 V163 H595 L595 36 C595 26 588 22 576 22 H569 L546 195 H512 L540 22 H505 Z" />
+                <path class="draw-path" d="M520 227 H546 V331 H520 Z" />
+                <path class="draw-path" d="M546 267 H623 V279 H546 Z" />
+                <path class="draw-path" d="M520 367 H639 V380 H520 Z" />
+                <path class="draw-path" d="M563 212 H596 L600 620 H560 Z" />
+
+                <!-- 室 -->
+                <path class="draw-path" d="M843 0 C865 0 874 3 878 12 L894 59 H857 Z" />
+                <path class="draw-path" d="M738 34 H776 V133 H737 Z" />
+                <path class="draw-path" d="M776 59 H973 C993 59 999 65 999 75 L1000 133 H962 L964 75 H776 Z" />
+                <path class="draw-path" d="M796 153 H941 V168 H796 Z" />
+                <path class="draw-path"
+                    d="M835 168 H874 L844 290 H910 L899 245 C922 245 930 248 934 257 L951 305 H824 C810 305 805 299 808 289 Z" />
+                <path class="draw-path" d="M789 438 H949 V455 H789 Z" />
+                <path class="draw-path" d="M849 336 H888 L891 601 H848 Z" />
+                <path class="draw-path" d="M738 601 H1000 V618 H738 Z" />
+            </svg>
+
+            <!-- 第二層（中景疊加）：三頭燭台 + 燭火發光 -->
+            <svg class="svg-candel" id="candelSvg" viewBox="0 0 500 560" xmlns="http://www.w3.org/2000/svg"
+                aria-label="燭台">
+                <defs>
+                    <radialGradient id="candleHalo" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#ffe7a3" stop-opacity="0.72" />
+                        <stop offset="35%" stop-color="#ffb156" stop-opacity="0.34" />
+                        <stop offset="70%" stop-color="#e87a48" stop-opacity="0.1" />
+                        <stop offset="100%" stop-color="#e87a48" stop-opacity="0" />
+                    </radialGradient>
+
+                    <linearGradient id="flameBody" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <stop offset="0%" stop-color="#fff8d6" />
+                        <stop offset="45%" stop-color="#ffcf6b" />
+                        <stop offset="100%" stop-color="#ff8c3b" />
+                    </linearGradient>
+
+                    <filter id="flameBlur" x="-60%" y="-60%" width="220%" height="220%">
+                        <feGaussianBlur stdDeviation="2.5" result="blur" />
+                        <feMerge>
+                            <feMergeNode in="blur" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                </defs>
+
+                <path class="candel-body" fill="#7576ca" d="
+          M 248 14 C 250 13 252 15 252 19 L 252 33
+          C 258 32 265 34 268 39 C 270 43 266 47 265 51
+          C 266 95 269 175 270 242
+          C 278 242 283 246 287 247
+          C 305 247 322 247 326 250 C 328 253 321 257 311 258
+          C 303 264 296 273 292 284
+          C 295 296 303 305 316 305
+          C 334 305 347 288 352 263
+          C 354 252 355 244 353 238
+          C 344 233 336 224 333 213
+          C 316 212 303 210 303 206 C 303 202 318 201 348 201
+          C 349 165 349 125 346 98
+          C 346 92 354 91 361 93 L 361 78 C 362 75 365 75 366 78 L 366 92
+          C 372 90 379 91 379 97
+          C 377 125 376 165 377 201
+          C 408 201 424 202 424 206 C 424 210 410 212 394 213
+          C 390 224 382 233 374 239
+          C 372 252 370 272 364 290
+          C 354 316 336 328 313 328
+          C 296 328 283 320 275 309
+          C 267 319 261 330 260 344
+          C 259 385 259 428 261 464
+          C 266 496 286 519 322 529
+          C 334 532 344 533 344 537 C 344 541 335 542 323 541
+          C 286 537 224 537 184 541
+          C 170 543 160 541 156 537 C 154 534 162 532 174 530
+          C 214 521 235 497 240 464
+          C 242 428 242 385 240 344
+          C 239 330 233 319 225 309
+          C 217 320 204 328 187 328
+          C 164 328 146 316 136 290
+          C 130 272 128 252 126 239
+          C 118 233 110 224 106 213
+          C 90 212 76 210 76 206 C 76 202 92 201 123 201
+          C 124 165 123 125 121 97
+          C 121 91 128 90 134 92 L 134 81 C 135 78 137 78 138 81 L 138 93
+          C 145 91 153 92 153 98
+          C 150 125 150 165 151 201
+          C 181 201 196 202 196 206 C 196 210 183 212 166 213
+          C 163 224 155 233 146 238
+          C 144 244 145 252 147 263
+          C 152 288 165 305 183 305
+          C 196 305 204 296 207 284
+          C 203 273 196 264 188 258
+          C 178 257 171 253 173 250 C 177 247 195 247 215 247
+          C 221 245 226 243 233 243
+          C 233 175 232 95 229 48
+          C 228 41 232 33 239 33 C 243 33 245 36 248 36 Z" />
+
+                <g class="candles-glow-group">
+                    <g class="candle-unit candle-left">
+                        <circle class="light-halo" cx="136" cy="67" r="78" fill="url(#candleHalo)" />
+                        <g class="flame-shape" filter="url(#flameBlur)">
+                            <path fill="url(#flameBody)" d="M 136 52 C 143 63 144 73 136 80 C 128 73 129 63 136 52 Z" />
+                            <path fill="#fffbe6" d="M 136 64 C 139.5 70 140 75 136 79 C 132 75 132.5 70 136 64 Z" />
+                        </g>
+                    </g>
+
+                    <g class="candle-unit candle-center">
+                        <circle class="light-halo" cx="250" cy="0" r="98" fill="url(#candleHalo)" />
+                        <g class="flame-shape" filter="url(#flameBlur)">
+                            <path fill="url(#flameBody)" d="M 250 -17 C 258 -4 259 7 250 15 C 241 7 242 -4 250 -17 Z" />
+                            <path fill="#fffbe6" d="M 250 -3 C 254 4 254.5 10 250 14 C 245.5 10 246 4 250 -3 Z" />
+                        </g>
+                    </g>
+
+                    <g class="candle-unit candle-right">
+                        <circle class="light-halo" cx="363.5" cy="64" r="78" fill="url(#candleHalo)" />
+                        <g class="flame-shape" filter="url(#flameBlur)">
+                            <path fill="url(#flameBody)"
+                                d="M 363.5 49 C 370.5 60 371.5 70 363.5 77 C 355.5 70 356.5 60 363.5 49 Z" />
+                            <path fill="#fffbe6"
+                                d="M 363.5 61 C 367 67 367.5 72 363.5 76 C 359.5 72 360 67 363.5 61 Z" />
+                        </g>
+                    </g>
+                </g>
+            </svg>
+
+            <!-- 第三層（前景）：點火進入遊戲 -->
+            <button type="button" class="enter-text" id="enterText">
+                點火進入遊戲
+            </button>
+        </div>
+    </main>
+
+    <!-- 第二頁：雙人角色場景（Hover 柔和打光 + 分別換圖 + 點擊切頁） -->
+    <section class="character-scene" id="characterScene" aria-label="角色畫面">
+        <div class="character-stage">
+            <!-- 左側男角（Hover 後點擊切換至下一頁） -->
+            <figure class="char-item char-boy" id="pcBoy" role="button" tabindex="0" aria-label="選擇男角色">
+                <span class="char-backlight" aria-hidden="true"></span>
+                <img class="char-visual img-default" src="./images/PC_boy.png" alt="男角色" />
+                <img class="char-visual img-hover" src="./images/IMG_8937 2.png" alt="男角色替換圖" />
+                <span class="candle-flame-glow boy-flame-1" aria-hidden="true"></span>
+                <span class="candle-flame-glow boy-flame-2" aria-hidden="true"></span>
+                <span class="candle-flame-glow boy-flame-3" aria-hidden="true"></span>
+            </figure>
+
+            <!-- 右側女角（Hover 後點擊切換至下一頁） -->
+            <figure class="char-item char-girl" id="pcGirl" role="button" tabindex="0" aria-label="選擇女角色">
+                <span class="char-backlight" aria-hidden="true"></span>
+                <img class="char-visual img-default" src="./images/PC_girl.png" alt="女角色" />
+                <img class="char-visual img-hover" src="./images/IMG_8938 2.png" alt="女角色替換圖" />
+                <span class="candle-flame-glow girl-flame-1" aria-hidden="true"></span>
+                <span class="candle-flame-glow girl-flame-2" aria-hidden="true"></span>
+                <span class="candle-flame-glow girl-flame-3" aria-hidden="true"></span>
+            </figure>
+        </div>
+
+       
+
+        <!-- 最下方：點擊選擇性別提示框 -->
+        <div class="gender-bar" id="genderBar" aria-label="點擊選擇性別">
+            <span class="gender-symbol symbol-male" aria-hidden="true">
+                <svg viewBox="0 0 40 64" class="gender-icon">
+                    <circle cx="20" cy="44" r="12" fill="none" stroke="currentColor" stroke-width="4.5" />
+                    <line x1="20" y1="32" x2="20" y2="8" stroke="currentColor" stroke-width="4.5"
+                        stroke-linecap="round" />
+                    <polyline points="11,17 20,7 29,17" fill="none" stroke="currentColor" stroke-width="4.5"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </span>
+
+            <span class="gender-prompt">點擊選擇性別</span>
+
+            <span class="gender-symbol symbol-female" aria-hidden="true">
+                <svg viewBox="0 0 40 64" class="gender-icon">
+                    <circle cx="20" cy="20" r="12" fill="none" stroke="currentColor" stroke-width="4.5" />
+                    <line x1="20" y1="32" x2="20" y2="57" stroke="currentColor" stroke-width="4.5"
+                        stroke-linecap="round" />
+                    <line x1="11" y1="45" x2="29" y2="45" stroke="currentColor" stroke-width="4.5"
+                        stroke-linecap="round" />
+                </svg>
+            </span>
+        </div>
+    </section>
+
+    <!-- 第三頁：開始告解頁面 -->
+    <section class="confession-start-scene" id="nextScene" aria-label="開始告解">
+        <!-- 左右雙燭台與燭火背景圖層 -->
+        <div class="candlfire-layer" aria-hidden="true">
+            <img class="candlfire-img" id="candlfireImg" src="./images/img_candlfire_4.0.png" alt="" />
+            <!-- 左側三處燭火微光 -->
+            <span class="side-flame-glow left-flame-1"></span>
+            <span class="side-flame-glow left-flame-2"></span>
+            <span class="side-flame-glow left-flame-3"></span>
+            <!-- 右側三處燭火微光 -->
+            <span class="side-flame-glow right-flame-1"></span>
+            <span class="side-flame-glow right-flame-2"></span>
+            <span class="side-flame-glow right-flame-3"></span>
+        </div>
+
+        <!-- 中央「開始告解」互動按鈕（點擊後切換至第四頁） -->
+        <button type="button" class="confession-title-btn" id="startConfessionBtn" aria-label="開始告解">
+            <img class="confession-title-img" id="confessionTitleImg" src="./images/start.png"
+                alt="開始告解" />
+        </button>
+    </section>
+
+    <!-- 第四頁：前情提要（打字機效果）與 Parallax.js 筆記線索頁面 -->
+    <section class="confession-room-scene" id="confessionRoomScene" aria-label="前情提要">
+        <!-- Parallax.js 滑鼠互動視差容器 -->
+        <div class="memo-parallax-scene" id="memoParallaxScene" aria-hidden="true">
+            <!-- 遠景層（data-depth="0.12"）：紙張後方微弱冷光陰影 -->
+            <div class="parallax-layer" data-depth="0.12">
+                <div class="memo-ambient-glow"></div>
+            </div>
+
+            <!-- 中景主層（data-depth="0.38"）：筆記本隨滑鼠位移 -->
+            <div class="parallax-layer" data-depth="0.38">
+                <div class="memo-overscan">
+                    <img class="memo-img is-jpg-fallback" id="memoImg" src="./images/Group 3.svg" alt="關鍵詞筆記" />
+                </div>
+            </div>
+
+            <!-- 近景層（data-depth="0.65"）：紙張上方浮動微塵光點 -->
+            <div class="parallax-layer" data-depth="0.65">
+                <div class="memo-dust-layer">
+                    <span class="dust-speck speck-1"></span>
+                    <span class="dust-speck speck-2"></span>
+                    <span class="dust-speck speck-3"></span>
+                    <span class="dust-speck speck-4"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右側劇情說明（逐字打字機進場）與 next 按鈕 -->
+        <div class="briefing-panel" id="briefingPanel">
+            <p class="briefing-story" id="briefingStory">
+                你是連環殺人案的犯人<br />
+                你剛犯下一起新的凶殺案<br />
+                這座警力低下的鎮子讓你實在提不起興趣<br />
+                但最近 你發現<br />
+                鎮上的神父似乎對你產生了疑心<br />
+                於是 你終於找到新的樂子
+            </p>
+
+            <p class="briefing-goal" id="briefingGoal">目標:隱藏自己的身分</p>
+            <p class="briefing-reminder" id="briefingReminder">
+                請記得紙上的關鍵詞
+            </p>
+
+            <button type="button" class="briefing-next-btn" id="briefingNextBtn" aria-label="下一步">
+                <span class="next-pill">next</span>
+                <span class="next-triangle" aria-hidden="true"></span>
+            </button>
+        </div>
+    </section>
+
+    <!-- 第五頁：操作方法頁面 -->
+    <section class="how-to-scene" id="howToPlayScene" aria-label="操作方法">
+        <div class="howto-container">
+            <h2 class="howto-title">操作方法</h2>
+
+            <div class="howto-list">
+                <!-- 第一列：對話框 -->
+                <div class="howto-row row-dialogue">
+                    <div class="howto-graphic dialogue-graphic" aria-hidden="true">
+                        <svg class="dialogue-svg" viewBox="0 0 260 110" xmlns="http://www.w3.org/2000/svg">
+                            <!-- 左上對話框（左下角尖尾） -->
+                            <g class="bubble-group bubble-left">
+                                <path fill="#ffffff" d="M 18 10 H 158 V 56 H 18 L 4 68 L 18 46 Z" />
+                            </g>
+                            <!-- 右下對話框（右下角尖尾） -->
+                            <g class="bubble-group bubble-right">
+                                <path fill="#ffffff" d="M 122 54 H 242 V 90 L 256 102 L 242 98 H 122 Z" />
+                            </g>
+                        </svg>
+                    </div>
+
+                    <div class="howto-arrow" aria-hidden="true">
+                        <span class="arrow-line"></span>
+                        <span class="arrow-head"></span>
+                    </div>
+
+                    <p class="howto-desc">對話框，與神父對話時出現。</p>
+                </div>
+
+                <!-- 第二列：七支蠟燭（可點擊吹熄/點亮） -->
+                <div class="howto-row row-candles">
+                    <div class="howto-graphic candles-graphic" id="howtoCandles" title="點擊蠟燭可吹熄或點亮">
+                        <div class="mini-candle" style="--h: 66%; --d: 0s">
+                            <span class="mini-smoke"></span>
+                            <span class="mini-flame"></span>
+                            <span class="mini-wick"></span>
+                            <span class="mini-body"></span>
+                        </div>
+                        <div class="mini-candle" style="--h: 45%; --d: 0.25s">
+                            <span class="mini-smoke"></span>
+                            <span class="mini-flame"></span>
+                            <span class="mini-wick"></span>
+                            <span class="mini-body"></span>
+                        </div>
+                        <div class="mini-candle" style="--h: 88%; --d: 0.5s">
+                            <span class="mini-smoke"></span>
+                            <span class="mini-flame"></span>
+                            <span class="mini-wick"></span>
+                            <span class="mini-body"></span>
+                        </div>
+                        <div class="mini-candle" style="--h: 47%; --d: 0.15s">
+                            <span class="mini-smoke"></span>
+                            <span class="mini-flame"></span>
+                            <span class="mini-wick"></span>
+                            <span class="mini-body"></span>
+                        </div>
+                        <div class="mini-candle" style="--h: 68%; --d: 0.4s">
+                            <span class="mini-smoke"></span>
+                            <span class="mini-flame"></span>
+                            <span class="mini-wick"></span>
+                            <span class="mini-body"></span>
+                        </div>
+                        <div class="mini-candle" style="--h: 57%; --d: 0.65s">
+                            <span class="mini-smoke"></span>
+                            <span class="mini-flame"></span>
+                            <span class="mini-wick"></span>
+                            <span class="mini-body"></span>
+                        </div>
+                        <div class="mini-candle" style="--h: 27%; --d: 0.3s">
+                            <span class="mini-smoke"></span>
+                            <span class="mini-flame"></span>
+                            <span class="mini-wick"></span>
+                            <span class="mini-body"></span>
+                        </div>
+                    </div>
+
+                    <div class="howto-arrow" aria-hidden="true">
+                        <span class="arrow-line"></span>
+                        <span class="arrow-head"></span>
+                    </div>
+
+                    <p class="howto-desc">蠟燭，熄滅的越多，神父的疑心越重。</p>
+                </div>
+
+                <!-- 第三列：四格選項 -->
+                <div class="howto-row row-options">
+                    <div class="howto-graphic options-graphic" aria-hidden="true">
+                        <span class="option-pill pill-1"></span>
+                        <span class="option-pill pill-2"></span>
+                        <span class="option-pill pill-3"></span>
+                        <span class="option-pill pill-4"></span>
+                    </div>
+
+                    <div class="howto-arrow" aria-hidden="true">
+                        <span class="arrow-line"></span>
+                        <span class="arrow-head"></span>
+                    </div>
+
+                    <p class="howto-desc">選項，選出好的回應方式。</p>
+                </div>
+            </div>
+
+            <!-- 最下方：滑鼠左鍵點擊動態提示 -->
+            <div class="howto-footer" id="howtoStartPrompt">
+                <div class="mouse-icon-wrap" aria-hidden="true">
+                    <span class="mouse-click-ring"></span>
+                    <svg class="mouse-svg" viewBox="0 0 64 96" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <clipPath id="mouseClip">
+                                <rect x="4" y="4" width="56" height="88" rx="28" ry="28" />
+                            </clipPath>
+                        </defs>
+                        <g clip-path="url(#mouseClip)">
+                            <!-- 滑鼠白色本體 -->
+                            <rect x="4" y="4" width="56" height="88" fill="#ffffff" />
+                            <!-- 紫色左鍵區域（隨點擊動畫發光下壓） -->
+                            <path class="mouse-left-btn" d="M 4 4 H 32 V 39 Q 18 37 4 41 Z" fill="#6b63d6" />
+                            <!-- 按鍵與鼠身分隔線 -->
+                            <path d="M 4 41 Q 32 35 60 41" fill="none" stroke="#6d70a6" stroke-width="3.2" />
+                            <line x1="32" y1="4" x2="32" y2="38" stroke="#6d70a6" stroke-width="3.2" />
+                        </g>
+                        <!-- 滑鼠外框 -->
+                        <rect x="4" y="4" width="56" height="88" rx="28" ry="28" fill="none" stroke="#6d70a6"
+                            stroke-width="3.6" />
+                    </svg>
+                </div>
+                <span class="howto-footer-text">左鍵選擇選項/繼續</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第六頁：遊戲開始前警告畫面 -->
+    <section class="warning-scene" id="warningScene" aria-label="遊戲警告提示">
+        <!-- 背景圖層：燭台 SVG + 動態燭火與餘燼 -->
+        <div class="warning-bg-layer" aria-hidden="true">
+            <img class="warning-candelfire-img" id="warningCandelfireImg" src="./images/img_candelfire_5.0.svg"
+                alt="" />
+
+            <!-- 與 16:9 背景燭芯對齊的 SVG 動態火光與餘燼層 -->
+            <svg class="warning-flames-svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice"
+                xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <radialGradient id="warnFlameHalo" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#fff3be" stop-opacity="0.78" />
+                        <stop offset="35%" stop-color="#ffaa4c" stop-opacity="0.38" />
+                        <stop offset="70%" stop-color="#e26a38" stop-opacity="0.12" />
+                        <stop offset="100%" stop-color="#e26a38" stop-opacity="0" />
+                    </radialGradient>
+
+                    <linearGradient id="warnFlameCore" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <stop offset="0%" stop-color="#fffbe0" />
+                        <stop offset="50%" stop-color="#ffca63" />
+                        <stop offset="100%" stop-color="#ff7f32" />
+                    </linearGradient>
+
+                    <filter id="warnFlameGlow" x="-60%" y="-60%" width="220%" height="220%">
+                        <feGaussianBlur stdDeviation="4" result="blur" />
+                        <feMerge>
+                            <feMergeNode in="blur" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                </defs>
+
+                <!-- 左上燭火 -->
+                <g class="warn-flame-unit wf-1">
+                    <circle class="warn-halo" cx="355" cy="18" r="95" fill="url(#warnFlameHalo)" />
+                    <path class="warn-tongue" filter="url(#warnFlameGlow)" fill="url(#warnFlameCore)"
+                        d="M 355 -16 C 367 4 369 20 355 32 C 341 20 343 4 355 -16 Z" />
+                </g>
+
+                <!-- 左中上主燭火 -->
+                <g class="warn-flame-unit wf-2">
+                    <circle class="warn-halo" cx="634" cy="115" r="125" fill="url(#warnFlameHalo)" />
+                    <path class="warn-tongue" filter="url(#warnFlameGlow)" fill="url(#warnFlameCore)"
+                        d="M 634 72 C 649 98 651 118 634 134 C 617 118 619 98 634 72 Z" />
+                </g>
+
+                <!-- 左下內側燭火 -->
+                <g class="warn-flame-unit wf-3">
+                    <circle class="warn-halo" cx="731" cy="458" r="105" fill="url(#warnFlameHalo)" />
+                    <path class="warn-tongue" filter="url(#warnFlameGlow)" fill="url(#warnFlameCore)"
+                        d="M 731 422 C 743 442 745 460 731 474 C 717 460 719 442 731 422 Z" />
+                </g>
+
+                <!-- 右下內側燭火 -->
+                <g class="warn-flame-unit wf-4">
+                    <circle class="warn-halo" cx="882" cy="458" r="105" fill="url(#warnFlameHalo)" />
+                    <path class="warn-tongue" filter="url(#warnFlameGlow)" fill="url(#warnFlameCore)"
+                        d="M 882 422 C 894 442 896 460 882 474 C 868 460 870 442 882 422 Z" />
+                </g>
+
+                <!-- 右中上主燭火 -->
+                <g class="warn-flame-unit wf-5">
+                    <circle class="warn-halo" cx="950" cy="115" r="125" fill="url(#warnFlameHalo)" />
+                    <path class="warn-tongue" filter="url(#warnFlameGlow)" fill="url(#warnFlameCore)"
+                        d="M 950 72 C 965 98 967 118 950 134 C 933 118 935 98 950 72 Z" />
+                </g>
+
+                <!-- 右上燭火 -->
+                <g class="warn-flame-unit wf-6">
+                    <circle class="warn-halo" cx="1226" cy="18" r="95" fill="url(#warnFlameHalo)" />
+                    <path class="warn-tongue" filter="url(#warnFlameGlow)" fill="url(#warnFlameCore)"
+                        d="M 1226 -16 C 1238 4 1240 20 1226 32 C 1212 20 1214 4 1226 -16 Z" />
+                </g>
+
+                <!-- 飄升金色火星餘燼 -->
+                <circle class="warn-ember em-1" cx="628" cy="95" r="3" fill="#ffd982" />
+                <circle class="warn-ember em-2" cx="645" cy="82" r="2.2" fill="#ffae52" />
+                <circle class="warn-ember em-3" cx="942" cy="92" r="3" fill="#ffd982" />
+                <circle class="warn-ember em-4" cx="962" cy="80" r="2.2" fill="#ffae52" />
+            </svg>
+        </div>
+
+        <!-- 星火飛舞動態畫布 -->
+        <canvas class="warning-sparks-canvas" id="warningSparksCanvas" aria-hidden="true"></canvas>
+
+        <!-- 中央洋紅框漸層警告視窗 -->
+        <div class="warning-card-frame" role="dialog" aria-labelledby="warningMessageText">
+            <div class="warning-card-inner">
+                <p class="warning-message" id="warningMessageText">
+                    切記，不要被神父發現你是兇手！
+                </p>
+                <button type="button" class="warning-start-btn" id="startGameBtn">
+                    開始遊戲
+                </button>
+            </div>
+        </div>
+    </section>
+<!-- 第七頁：五題互動系統  -->
+<section class="question-scene" id="questionScene" aria-label="告解互動題目">
+    <div class="question-stage">
+        <!-- 第七頁背景圖片 -->
+        <img class="question-room-bg" src="./images/bg/bg_confessional.PNG" alt="" aria-hidden="true" />
+        <!-- 左側為神父，右側玩家立繪會依前面選擇的角色切換 -->
+        <img class="question-npc question-npc-left" id="questionNpcLeft" src="./images/bg/F_close.PNG"
+            alt="左側NPC" />
+        <img class="question-npc question-npc-right" id="questionNpcRight" src="./images/PC_B/PC_close.PNG"
+            alt="右側NPC" />
+        <!-- 左右對話區：由JS依序產生對話泡泡 -->
+        <div class="question-dialogues" id="questionDialogues" aria-live="polite" tabindex="0"
+            aria-label="對話內容，可上下捲動"></div>
+        <!-- 四個選項：由JS依題目更換文字 -->
+        <div class="question-choice-panel" id="questionChoicePanel">
+            <div class="question-scoreboard" id="questionScoreboard" role="img"
+                aria-label="蠟燭記分板，七根燭火全亮" aria-live="polite">
+                <img class="question-scoreboard-art" src="./images/bg/IMG_8976.PNG" alt="" />
+            </div>
+            <button type="button" class="question-choice"></button>
+            <button type="button" class="question-choice"></button>
+            <button type="button" class="question-choice"></button>
+            <button type="button" class="question-choice"></button>
+        </div>
+        <!-- 五題完成後的提示，以及重新開始題目的按鈕。 -->
+        <div class="question-finish" id="questionFinish" hidden>
+            <p>五題已完成</p>
+            <button type="button" id="questionRestartBtn">重新開始題目</button>
+        </div>
+        <p class="question-continue-hint">點擊任意處繼續</p>
+    </div>
+</section>
+
+<!-- 第七頁特殊環節前導 CG：點擊後進入心跳檢定。 -->
+<button type="button" class="rhythm-intro-scene" id="rhythmIntroScene"
+    aria-label="特殊環節前導畫面，點擊畫面繼續">
+    <img class="rhythm-intro-bg" src="./images/bg/bg_desk.PNG" alt="" aria-hidden="true" />
+    <img class="rhythm-intro-candles" src="./images/bg/candle_5.PNG" alt="" aria-hidden="true" />
+    <span class="rhythm-intro-hint">點擊畫面繼續</span>
+</button>
+
+<!-- 第七頁特殊環節：累計扣兩分時啟動心跳檢定 -->
+
+<section class="rhythm-scene" id="rhythmScene" aria-label="心跳節奏檢定" data-gender="male">
+    <div class="rhythm-dialogue-box" id="rhythmDialogueBox" role="group" aria-label="神父對話框">
+        <p class="rhythm-dialogue-text" id="rhythmDialogueText"></p>
+        <span class="dialogue-next-hint" id="dialogueNextHint">點擊繼續 ▾</span>
+    </div>
+
+    <div class="rhythm-track-area is-standby" id="rhythmTrackArea">
+        <div class="rhythm-wave-status" aria-label="心跳穩定進度">
+            <span class="wave-label" id="rhythmWaveLabel">等待對話結束…</span>
+            <div class="wave-pips" id="rhythmWavePips">
+                <span class="wave-pip is-current"></span>
+                <span class="wave-pip"></span>
+                <span class="wave-pip"></span>
+                <span class="wave-pip"></span>
+            </div>
+        </div>
+        <div class="rhythm-bar" id="rhythmBar">
+            <div class="rhythm-red-zone" id="rhythmRedZone">
+                <span class="zone-bound bound-left" aria-hidden="true"></span>
+                <span class="zone-bound bound-right" aria-hidden="true"></span>
+            </div>
+            <span class="rhythm-beat-flash" id="rhythmBeatFlash" aria-hidden="true"></span>
+        </div>
+        <div class="rhythm-arrow-track">
+            <div class="rhythm-arrow" id="rhythmArrow" aria-hidden="true"></div>
+        </div>
+        <div class="rhythm-judgment" id="rhythmJudgment" aria-live="polite"></div>
+    </div>
+
+    <div class="rhythm-character-wrap" id="rhythmCharacterWrap">
+        <img class="rhythm-character-img is-black-bg" id="rhythmCharacterImg"
+            src="./images/PC_B/PC_heart.PNG" alt="角色按住胸口" />
+        <button type="button" class="rhythm-heart-btn" id="rhythmHeartBtn" aria-label="點擊紅心穩定心跳"
+            disabled>
+            <span class="heart-shockwave" aria-hidden="true"></span>
+            <svg class="heart-svg" viewBox="0 0 120 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path class="heart-shape"
+                    d="M 60 98 C 60 98 12 68 12 35 C 12 18 25 8 40 8 C 50 8 57 14 60 21 C 63 14 70 8 80 8 C 95 8 108 18 108 35 C 108 68 60 98 60 98 Z" />
+            </svg>
+            <span class="heart-label">點擊</span>
+        </button>
+    </div>
+
+    <div class="rhythm-candles-wrap" id="rhythmCandlesWrap" aria-label="燭火狀態">
+        <img class="rhythm-candles-img" id="rhythmCandlesImg"
+            src="./images/bg/IMG_8976.PNG" alt="蠟燭" />
+    </div>
+
+    <div class="rhythm-instruction-box" id="rhythmInstructionBox">
+        <p class="rhythm-instruction-text" id="rhythmInstructionText"></p>
+        <button type="button" class="rhythm-action-btn" id="rhythmActionBtn" hidden>繼續對話</button>
+    </div>
+</section>
+
+<!-- 第七頁特殊環節：依所選角色進入狡辯環節。 -->
+<section class="excuse-scene" id="excuseScene" aria-label="狡辯環節"
+    data-gender="male" data-asset-base="./images/PC_B/">
+    <div class="excuse-hud" aria-label="狡辯倒數">
+        <div class="hud-card hud-timer" id="hudTimerCard">
+            <span class="hud-label">狡辯時限</span>
+            <span class="hud-value" id="timerValueText">5.0s</span>
+        </div>
+    </div>
+
+    <div class="dialogue-column dialogue-column-left" id="leftDialogueColumn" aria-label="神父詰問"></div>
+    <div class="dialogue-column dialogue-column-center" id="centerDialogueColumn" aria-label="教徒狡辯"></div>
+    <div class="dialogue-control-hint" id="dialogueControlHint">點擊畫面或按空白鍵繼續對話 ▾</div>
+
+    <div class="excuse-character-wrap" id="excuseCharacterWrap">
+        <img class="excuse-character-img is-black-bg" id="excuseCharacterImg"
+            src="./images/PC_B/PC_talk.PNG" alt="男角色神情" />
+    </div>
+
+    <div class="excuse-candles-wrap" id="excuseCandlesWrap" aria-label="燭火狀態">
+        <img class="excuse-candles-img" id="excuseCandlesImg"
+            src="./images/bg/IMG_8976.PNG" alt="七支蠟燭" />
+    </div>
+
+    <div class="excuse-feedback-banner" id="excuseFeedbackBanner" aria-live="polite"></div>
+
+    <div class="excuse-typing-box is-standby" id="excuseTypingBox" aria-label="快速打字母狡辯區">
+        <div class="typing-timer-track" aria-hidden="true">
+            <div class="typing-timer-fill" id="typingTimerFill"></div>
+        </div>
+        <div class="typing-header-bar">
+            <span class="typing-status-badge" id="typingStatusBadge">等待對話結束…</span>
+            <button type="button" class="excuse-action-btn" id="excuseActionBtn" hidden>繼續告解</button>
+        </div>
+        <div class="typing-letters-grid" id="typingLettersGrid"></div>
+    </div>
+</section>
+
+<!-- 共用七根燭火的結構；由 motion.js 複製到記分板、心跳與狡辯畫面。 -->
+<template id="candleSlotsTemplate">
+    <div class="candle-flame-slot slot-1" data-candle-index="0">
+        <span class="slot-glow"></span><span class="slot-flame"></span><span class="slot-smoke"></span>
+    </div>
+    <div class="candle-flame-slot slot-2" data-candle-index="1">
+        <span class="slot-glow"></span><span class="slot-flame"></span><span class="slot-smoke"></span>
+    </div>
+    <div class="candle-flame-slot slot-3" data-candle-index="2">
+        <span class="slot-glow"></span><span class="slot-flame"></span><span class="slot-smoke"></span>
+    </div>
+    <div class="candle-flame-slot slot-4" data-candle-index="3">
+        <span class="slot-glow"></span><span class="slot-flame"></span><span class="slot-smoke"></span>
+    </div>
+    <div class="candle-flame-slot slot-5" data-candle-index="4">
+        <span class="slot-glow"></span><span class="slot-flame"></span><span class="slot-smoke"></span>
+    </div>
+    <div class="candle-flame-slot slot-6" data-candle-index="5">
+        <span class="slot-glow"></span><span class="slot-flame"></span><span class="slot-smoke"></span>
+    </div>
+    <div class="candle-flame-slot slot-7" data-candle-index="6">
+        <span class="slot-glow"></span><span class="slot-flame"></span><span class="slot-smoke"></span>
+    </div>
+</template>
+
+    <!-- Parallax.js 視差外掛函式庫 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+    <script src="js/motion.js"></script>
+</body>
+
+</html>
