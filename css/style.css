@@ -1775,8 +1775,11 @@ body {
     position: relative;
     z-index: 3;
     width: min(86vw, 490px);
-      padding: 4px;
-        background-color: #8b1c5a;
+      padding: 0;
+    border: 4px solid #8b1c5a;
+    background: transparent;
+    -webkit-backdrop-filter: blur(16px) saturate(110%);
+    backdrop-filter: blur(16px) saturate(110%);
     border-radius: 9px;
     box-shadow:
         0 14px 32px rgba(8, 8, 28, 0.6),
@@ -1813,7 +1816,12 @@ body {
     min-height: clamp(210px, 31vh, 268px);
     padding: clamp(28px, 4.5vh, 42px) clamp(20px, 3vw, 36px);
     border-radius: 6px;
-    background: linear-gradient(180deg, #7f83b6 0%, #64639b 48%, #484579 100%);
+    background: linear-gradient(
+        180deg,
+        rgba(127, 131, 182, 0.58) 0%,
+        rgba(100, 99, 155, 0.52) 48%,
+        rgba(72, 69, 121, 0.58) 100%
+    );
     display: flex;
     flex-direction: column;
     align-items: center;
