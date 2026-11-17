@@ -873,7 +873,9 @@ body {
     cursor: pointer;
     padding: 20px;
     border-radius: 16px;
-    background: rgba(36, 35, 91, 0.25);
+    background: rgba(36, 35, 91, 0.32);
+    -webkit-backdrop-filter: blur(16px) saturate(110%);
+    backdrop-filter: blur(16px) saturate(110%);
 }
 
 .briefing-story {
