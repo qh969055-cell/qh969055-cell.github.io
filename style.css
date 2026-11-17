@@ -872,9 +872,9 @@ body {
   padding: 20px;
   border-radius: 16px;
   isolation: isolate;
-  border: 1px solid rgba(227, 234, 255, 0.38);
+  border: 1px solid rgba(227, 234, 255, 0.62);
   background:
-    linear-gradient(125deg, rgba(255, 255, 255, 0.16), transparent 35%, rgba(190, 204, 255, 0.07) 68%, transparent),
+    linear-gradient(125deg, rgba(255, 255, 255, 0.28), transparent 35%, rgba(190, 204, 255, 0.12) 68%, transparent),
     rgba(28, 29, 77, 0.48);
   -webkit-backdrop-filter: blur(14px) saturate(125%);
   backdrop-filter: blur(14px) saturate(125%);
@@ -901,11 +901,11 @@ body {
     120deg,
     transparent 12%,
     rgba(239, 245, 255, 0.03) 23%,
-    rgba(239, 245, 255, 0.18) 27%,
+    rgba(239, 245, 255, 0.34) 27%,
     rgba(239, 245, 255, 0.04) 31%,
     transparent 39%,
     transparent 62%,
-    rgba(215, 227, 255, 0.07) 67%,
+    rgba(215, 227, 255, 0.16) 67%,
     transparent 73%
   );
 }
