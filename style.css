@@ -1773,7 +1773,7 @@ body {
   position: relative;
   z-index: 3;
   width: min(86vw, 490px);
-  padding: clamp(10px, 1.1vw, 14px);
+  padding: clamp(3px, 0.35vw, 4px);
   background-color: #8b1c5a;
   border-radius: 9px;
   box-shadow:
