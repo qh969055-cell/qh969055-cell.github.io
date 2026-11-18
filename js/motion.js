@@ -1743,20 +1743,85 @@ document.addEventListener("DOMContentLoaded", () => {
     let sweepStartTime = 0;
     let trace = [];
     let pendingPeaks = [];
+    let wavePeaks = [];
+    let waveStrengths = [];
+    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const beatShape = [[-27, 0], [-18, 5], [-12, 0], [-6, -11], [0, 53],
+      [9, -21], [17, 0], [31, 10], [46, 0]];
 
-    function drawTrace(peaks, amplitude) {
-      const baseline = 76;
-      trace = [[0, baseline]];
-      const shape = [[-27, 0], [-18, 5], [-12, 0], [-6, -11], [0, 53],
-        [9, -21], [17, 0], [31, 10], [46, 0]];
+    function drawTrace(peaks, amplitude, now = 0) {
+      function baselineAt(x) {
+        if (!now) return 76;
+        return 76 + Math.sin(x / 115 - now / 230) * 2.8 +
+          Math.sin(x / 48 - now / 430) * 1.2;
+      }
+
+      trace = [[0, baselineAt(0)]];
       peaks.forEach((peak, index) => {
-        const strength = Array.isArray(amplitude) ? amplitude[index] : amplitude;
-        shape.forEach(([offset, height]) => {
-          trace.push([peak * 10 + offset, baseline - height * strength]);
+        const base = Array.isArray(amplitude) ? amplitude[index] : amplitude;
+        const strength = now ? base * (1 + Math.sin(now / 180 - index * .92) * .21) : base;
+        beatShape.forEach(([offset, height]) => {
+          const x = peak * 10 + offset;
+          if (x > 0 && x < 1000) trace.push([x, baselineAt(x) - height * strength]);
         });
       });
-      trace.push([1000, baseline]);
-      rhythmEcgTrace?.setAttribute("points", trace.map(point => point.join(",")).join(" "));
+      trace.push([1000, baselineAt(1000)]);
+      rhythmEcgTrace?.setAttribute("points", trace.map(point =>
+        point.map(value => value.toFixed(2)).join(",")).join(" "));
+    }
+
+    function drawAmbientTrace(now) {
+      const stable = rhythmEcg?.classList.contains("is-stable");
+      if (phase === "rhythm" && wavePeaks.length) {
+        drawTrace(wavePeaks, waveStrengths, now);
+        positionScan(scanPercent);
+        return;
+      }
+
+      const scrolling = motionPreference.matches ? 0 : (now / (stable ? 48 : 38)) % 100;
+      const beats = stable ? [8, 33, 58, 83] : [9, 29, 58, 74, 91];
+      const peaks = [];
+      const strengths = [];
+      for (let repeat = -1; repeat <= 1; repeat++) {
+        beats.forEach((beat, index) => {
+          const position = repeat * 100 + beat - scrolling;
+          if (position < -5 || position > 104) return;
+          peaks.push(position);
+          strengths.push(stable ? .64 : [.56, 1, .73, .9, .49][index]);
+        });
+      }
+      drawTrace(peaks, strengths);
+    }
+
+    let ambientFrame = null;
+
+    function animateAmbient(now) {
+      if (rhythmScene?.classList.contains("is-active") && !motionPreference.matches) {
+        if (!isSweepActive) drawAmbientTrace(now);
+        ambientFrame = requestAnimationFrame(animateAmbient);
+      } else {
+        ambientFrame = null;
+      }
+    }
+
+    function syncAmbient() {
+      const active = rhythmScene?.classList.contains("is-active");
+      if (active && !motionPreference.matches) {
+        if (ambientFrame === null) ambientFrame = requestAnimationFrame(animateAmbient);
+        return;
+      }
+      if (ambientFrame !== null) {
+        cancelAnimationFrame(ambientFrame);
+        ambientFrame = null;
+      }
+      if (active && !isSweepActive) drawAmbientTrace(0);
+    }
+
+    if (rhythmScene) {
+      const sceneObserver = new MutationObserver(syncAmbient);
+      sceneObserver.observe(rhythmScene, { attributes: true, attributeFilter: ["class"] });
+      motionPreference.addEventListener("change", syncAmbient);
+      syncAmbient();
     }
 
     function isInWindow(percent) {
@@ -1819,10 +1884,12 @@ document.addEventListener("DOMContentLoaded", () => {
       scanPercent = 0;
       const target = activeZoneStart + activeZoneWidth / 2;
       const sidePeaks = [[14, 30, 84], [12, 48, 87], [17, 32, 79], [19, 41, 89]];
-      pendingPeaks = [...sidePeaks[waveIndex].slice(0, 2), target, sidePeaks[waveIndex][2]];
+      wavePeaks = [...sidePeaks[waveIndex].slice(0, 2), target, sidePeaks[waveIndex][2]];
+      pendingPeaks = [...wavePeaks];
       const irregularity = 1 - waveIndex * 0.2;
-      drawTrace(pendingPeaks, [1 - 0.22 * irregularity, 1 + 0.13 * irregularity,
-        1, 1 - 0.34 * irregularity]);
+      waveStrengths = [1 - 0.22 * irregularity, 1 + 0.13 * irregularity,
+        1, 1 - 0.34 * irregularity];
+      drawTrace(wavePeaks, waveStrengths);
       if (rhythmEcgWindow) {
         rhythmEcgWindow.style.left = `${activeZoneStart - HIT_TOLERANCE}%`;
         rhythmEcgWindow.style.width = `${activeZoneWidth + HIT_TOLERANCE * 2}%`;
@@ -1845,6 +1912,7 @@ document.addEventListener("DOMContentLoaded", () => {
           } while (pendingPeaks.length && scanPercent >= pendingPeaks[0]);
           triggerHeartbeatPulse();
         }
+        if (!motionPreference.matches) drawTrace(wavePeaks, waveStrengths, now);
         positionScan(scanPercent);
 
         if (t >= 1) {
@@ -1870,7 +1938,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (rhythmHeartBtn) rhythmHeartBtn.disabled = true;
       rhythmEcg?.classList.remove("is-hit", "is-in-window");
       rhythmEcg?.classList.add(isPassed ? "is-stable" : "is-missed");
-      if (isPassed) drawTrace([16, 38, 60, 82], 0.64);
+      drawAmbientTrace(performance.now());
 
       if (isPassed) {
         playTone(659.25, 0.35, "triangle", 0.2, 1.15);
@@ -2014,7 +2082,9 @@ document.addEventListener("DOMContentLoaded", () => {
       stop() {
         isSweepActive = false;
         rhythmEcg?.classList.remove("is-stable", "is-missed", "is-hit", "is-in-window");
-        drawTrace([], 0);
+        wavePeaks = [];
+        waveStrengths = [];
+        drawAmbientTrace(0);
         positionScan(0);
         if (rhythmEcgWindow) rhythmEcgWindow.style.width = "0";
         clearStepTimers();
