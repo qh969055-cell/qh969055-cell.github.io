@@ -3794,16 +3794,29 @@ body {
 }
 
 .letter-char {
-  color: rgba(255, 255, 255, 0.88);
-  font-family: "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
+  display: block;
+  width: .78em;
+  height: 1em;
+  overflow: visible;
+  color: #c8ccef;
   font-size: clamp(38px, 4.5vw, 66px);
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: 0;
   transition:
     color 0.16s ease,
     transform 0.16s cubic-bezier(0.22, 1, 0.36, 1),
-    text-shadow 0.16s ease;
+    filter 0.16s ease;
+}
+
+.letter-glyph {
+  font-family: "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
+  font-size: 67px;
+  font-weight: 400;
+  fill: transparent;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-dasharray: 2.6 2.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: fill 0.22s ease, stroke 0.16s ease;
 }
 
 .letter-underline {
@@ -3821,7 +3834,7 @@ body {
 .letter-slot.is-current .letter-char {
   color: #ffffff;
   transform: translateY(-4px) scale(1.06);
-  text-shadow: 0 0 18px rgba(255, 255, 255, 0.72);
+  filter: drop-shadow(0 0 7px rgba(255, 255, 255, 0.6));
 }
 
 .letter-slot.is-current .letter-underline {
@@ -3833,7 +3846,12 @@ body {
 .letter-slot.is-typed .letter-char {
   color: #7ef78e;
   transform: translateY(-2px) scale(1.02);
-  text-shadow: 0 0 18px rgba(126, 247, 142, 0.8);
+  filter: drop-shadow(0 0 8px rgba(126, 247, 142, 0.75));
+}
+
+.letter-slot.is-typed .letter-glyph {
+  fill: #7ef78e;
+  stroke: #c5ffd0;
 }
 
 .letter-slot.is-typed .letter-underline {

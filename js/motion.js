@@ -2649,9 +2649,20 @@ document.addEventListener("DOMContentLoaded", () => {
       if (idx === 0) slot.classList.add("is-current");
       slot.dataset.index = String(idx);
 
-      const charEl = document.createElement("span");
-      charEl.className = "letter-char";
-      charEl.textContent = ch;
+      const svgNamespace = "http://www.w3.org/2000/svg";
+      const charEl = document.createElementNS(svgNamespace, "svg");
+      charEl.setAttribute("class", "letter-char");
+      charEl.setAttribute("viewBox", "0 0 56 72");
+      charEl.setAttribute("role", "img");
+      charEl.setAttribute("aria-label", ch);
+      const glyph = document.createElementNS(svgNamespace, "text");
+      glyph.setAttribute("class", "letter-glyph");
+      glyph.setAttribute("x", "28");
+      glyph.setAttribute("y", "56");
+      glyph.setAttribute("text-anchor", "middle");
+      glyph.setAttribute("aria-hidden", "true");
+      glyph.textContent = ch;
+      charEl.appendChild(glyph);
 
       const lineEl = document.createElement("span");
       lineEl.className = "letter-underline";
