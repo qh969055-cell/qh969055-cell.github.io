@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>告解室</title>
-    <link rel="stylesheet" href="css/style.css?v=panels-frost-20261118-2" />
+    <link rel="stylesheet" href="css/style.css?v=ecg-20261118" />
 </head>
 
 <body>
@@ -571,15 +571,15 @@
                 <span class="wave-pip"></span>
             </div>
         </div>
-        <div class="rhythm-bar" id="rhythmBar">
-            <div class="rhythm-red-zone" id="rhythmRedZone">
-                <span class="zone-bound bound-left" aria-hidden="true"></span>
-                <span class="zone-bound bound-right" aria-hidden="true"></span>
-            </div>
-            <span class="rhythm-beat-flash" id="rhythmBeatFlash" aria-hidden="true"></span>
-        </div>
-        <div class="rhythm-arrow-track">
-            <div class="rhythm-arrow" id="rhythmArrow" aria-hidden="true"></div>
+        <div class="rhythm-ecg" id="rhythmEcg" aria-hidden="true">
+            <div class="rhythm-ecg-window" id="rhythmEcgWindow"></div>
+            <svg class="rhythm-ecg-svg" viewBox="0 0 1000 140" preserveAspectRatio="none">
+                <polyline class="rhythm-ecg-trace" id="rhythmEcgTrace" points="0,76 1000,76" />
+                <g class="rhythm-ecg-cursor" id="rhythmEcgCursor">
+                    <line y1="0" y2="140" />
+                    <line class="rhythm-ecg-dot" id="rhythmEcgDot" x1="0" x2="0.01" y1="76" y2="76" />
+                </g>
+            </svg>
         </div>
         <div class="rhythm-judgment" id="rhythmJudgment" aria-live="polite"></div>
     </div>
@@ -674,7 +674,7 @@
 
     <!-- Parallax.js 視差外掛函式庫 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
-    <script src="js/motion.js"></script>
+    <script src="js/motion.js?v=ecg-20261118"></script>
 </body>
 
 </html>

@@ -2493,100 +2493,74 @@ body {
   box-shadow: 0 0 10px rgba(126, 224, 129, 0.65);
 }
 
-/* 水平節奏條主體 */
-.rhythm-bar {
+/* 心電圖、掃描亮點和可安定心跳的時機 */
+.rhythm-ecg {
   position: relative;
-  width: 100%;
-  height: clamp(22px, 2.8vh, 28px);
-  background-color: #848ac7;
-  box-shadow: 0 6px 0 #131238;
+  height: clamp(67px, 10vh, 108px);
+  overflow: hidden;
+  border: 1px solid rgba(125, 195, 174, 0.42);
+  border-radius: 7px;
+  background-color: #101a2a;
+  background-image:
+    linear-gradient(rgba(117, 191, 170, 0.10) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(117, 191, 170, 0.10) 1px, transparent 1px);
+  background-size: 13px 13px;
+  box-shadow: inset 0 0 21px #080e1b, 0 4px 16px #080e1b80;
+  color: #83eac4;
 }
 
-/* 紅色判定區域 */
-.rhythm-red-zone {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 48%;
-  width: 13%;
-  background-color: #c92020;
-  transition:
-    left 0.38s cubic-bezier(0.22, 1, 0.36, 1),
-    width 0.38s cubic-bezier(0.22, 1, 0.36, 1),
-    background-color 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.rhythm-red-zone.is-zone-hit {
-  background-color: #4be36d;
-  box-shadow: 0 0 24px rgba(75, 227, 109, 0.95);
-}
-
-/* 紅色區域左右兩側的深色垂直標記線 */
-.zone-bound {
-  position: absolute;
-  top: -5px;
-  bottom: -5px;
-  width: clamp(8px, 0.85vw, 12px);
-  background-color: #41458e;
-}
-
-.bound-left {
-  left: -2px;
-}
-
-.bound-right {
-  right: -2px;
-}
-
-/* 心跳拍點微光波紋 */
-.rhythm-beat-flash {
+.rhythm-ecg-svg, .rhythm-ecg-window {
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.24);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.rhythm-beat-flash.is-pulsing {
-  animation: barBeatFlash 0.24s ease-out;
-}
-
-@keyframes barBeatFlash {
-  0% {
-    opacity: 0.75;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-/* 下方三角形箭頭軌道 */
-.rhythm-arrow-track {
-  position: relative;
   width: 100%;
-  height: 36px;
-  margin-top: 16px;
+  height: 100%;
 }
 
-.rhythm-arrow {
-  position: absolute;
-  top: 0;
-  left: 0%;
-  width: 0;
-  height: 0;
-  transform: translateX(-50%);
-  border-left: clamp(12px, 1.25vw, 17px) solid transparent;
-  border-right: clamp(12px, 1.25vw, 17px) solid transparent;
-  border-bottom: clamp(20px, 2.2vw, 28px) solid #848ac7;
-  filter: drop-shadow(0 4px 8px rgba(10, 10, 34, 0.45));
-  transition: border-bottom-color 0.12s ease;
-  will-change: left;
+.rhythm-ecg-window {
+  width: auto;
+  right: auto;
+  background: #a9e9a926;
+  border-inline: 1px solid #b7f1ac9e;
 }
 
-.rhythm-arrow.is-in-zone {
-  border-bottom-color: #ff6b6b;
-  filter: drop-shadow(0 0 12px rgba(255, 82, 82, 0.85));
+.rhythm-ecg-trace, .rhythm-ecg-cursor line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5px;
+  vector-effect: non-scaling-stroke;
+}
+
+.rhythm-ecg-trace {
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 3px currentColor);
+}
+
+.rhythm-ecg-cursor {
+  color: #d6fff0;
+}
+
+.rhythm-ecg-cursor > line:first-child {
+  opacity: 0.45;
+  stroke-dasharray: 3 4;
+}
+
+.rhythm-ecg-cursor .rhythm-ecg-dot {
+  stroke-width: 7px;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 3px currentColor);
+}
+
+.rhythm-ecg.is-in-window .rhythm-ecg-cursor { color: #edffc2; }
+.rhythm-ecg.is-hit .rhythm-ecg-window { background: #7ee08152; }
+.rhythm-ecg.is-stable { color: #adf5a8; }
+.rhythm-ecg.is-missed { color: #ffa195; }
+.rhythm-track-area.is-standby .rhythm-ecg-cursor,
+.rhythm-ecg.is-stable .rhythm-ecg-cursor,
+.rhythm-ecg.is-missed .rhythm-ecg-cursor,
+.rhythm-ecg.is-stable .rhythm-ecg-window,
+.rhythm-ecg.is-missed .rhythm-ecg-window {
+  visibility: hidden;
 }
 
 /* 判定文字回饋 */

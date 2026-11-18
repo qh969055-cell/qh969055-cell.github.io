@@ -1377,9 +1377,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const rhythmTrackArea = document.getElementById("rhythmTrackArea");
   const rhythmWaveLabel = document.getElementById("rhythmWaveLabel");
   const rhythmWavePips = document.getElementById("rhythmWavePips");
-  const rhythmRedZone = document.getElementById("rhythmRedZone");
-  const rhythmBeatFlash = document.getElementById("rhythmBeatFlash");
-  const rhythmArrow = document.getElementById("rhythmArrow");
+  const rhythmEcg = document.getElementById("rhythmEcg");
+  const rhythmEcgWindow = document.getElementById("rhythmEcgWindow");
+  const rhythmEcgTrace = document.getElementById("rhythmEcgTrace");
+  const rhythmEcgCursor = document.getElementById("rhythmEcgCursor");
+  const rhythmEcgDot = document.getElementById("rhythmEcgDot");
   const rhythmJudgment = document.getElementById("rhythmJudgment");
 
   const rhythmCharacterImg = document.getElementById("rhythmCharacterImg");
@@ -1586,7 +1588,6 @@ document.addEventListener("DOMContentLoaded", () => {
       zoneStart: 48,
       zoneWidth: 13,
       duration: 1750,
-      cueTimes: [0.18, 0.36],
       curve(t) {
         return (0.45 * t + 0.55 * Math.pow(t, 2.2)) * 100;
       },
@@ -1597,7 +1598,6 @@ document.addEventListener("DOMContentLoaded", () => {
       zoneStart: 60,
       zoneWidth: 12,
       duration: 1950,
-      cueTimes: [0.16, 0.48],
       curve(t) {
         if (t < 0.28) return (t / 0.28) * 38;
         if (t < 0.5) return 38 + ((t - 0.28) / 0.22) * 2;
@@ -1611,7 +1611,6 @@ document.addEventListener("DOMContentLoaded", () => {
       zoneStart: 42,
       zoneWidth: 11,
       duration: 2050,
-      cueTimes: [0.2, 0.42, 0.55],
       curve(t) {
         if (t < 0.32) return (t / 0.32) * 34;
         if (t < 0.48) return 34 - ((t - 0.32) / 0.16) * 11;
@@ -1625,7 +1624,6 @@ document.addEventListener("DOMContentLoaded", () => {
       zoneStart: 66,
       zoneWidth: 10,
       duration: 1480,
-      cueTimes: [0.14, 0.28, 0.42],
       curve(t) {
         const jitter = Math.sin(t * Math.PI * 3) * 0.025;
         return Math.min(100, Math.max(0, (t + jitter) * 100));
@@ -1738,12 +1736,46 @@ document.addEventListener("DOMContentLoaded", () => {
     let rafId = null;
     let stepTimers = [];
     let waveIndex = 0;
-    let arrowPercent = 0;
+    let scanPercent = 0;
     let activeZoneStart = 48;
     let activeZoneWidth = 13;
     let isSweepActive = false;
     let sweepStartTime = 0;
-    let beatStepTriggered = [];
+    let trace = [];
+    let pendingPeaks = [];
+
+    function drawTrace(peaks, amplitude) {
+      const baseline = 76;
+      trace = [[0, baseline]];
+      const shape = [[-27, 0], [-18, 5], [-12, 0], [-6, -11], [0, 53],
+        [9, -21], [17, 0], [31, 10], [46, 0]];
+      peaks.forEach((peak, index) => {
+        const strength = Array.isArray(amplitude) ? amplitude[index] : amplitude;
+        shape.forEach(([offset, height]) => {
+          trace.push([peak * 10 + offset, baseline - height * strength]);
+        });
+      });
+      trace.push([1000, baseline]);
+      rhythmEcgTrace?.setAttribute("points", trace.map(point => point.join(",")).join(" "));
+    }
+
+    function isInWindow(percent) {
+      return percent >= activeZoneStart - HIT_TOLERANCE &&
+        percent <= activeZoneStart + activeZoneWidth + HIT_TOLERANCE;
+    }
+
+    function positionScan(percent) {
+      if (!rhythmEcgCursor || !rhythmEcgDot) return;
+      const x = Math.min(995, Math.max(5, percent * 10));
+      const right = trace.findIndex(point => point[0] >= x);
+      const [x0, y0] = trace[right - 1];
+      const [x1, y1] = trace[right];
+      const y = y0 + ((x - x0) / (x1 - x0)) * (y1 - y0);
+      rhythmEcgCursor.setAttribute("transform", `translate(${x} 0)`);
+      rhythmEcgDot.setAttribute("y1", y);
+      rhythmEcgDot.setAttribute("y2", y);
+      rhythmEcg?.classList.toggle("is-in-window", isInWindow(percent));
+    }
 
     function clearStepTimers() {
       stepTimers.forEach((id) => clearTimeout(id));
@@ -1758,11 +1790,6 @@ document.addEventListener("DOMContentLoaded", () => {
           setTimeout(() => rhythmHeartBtn.classList.remove("is-beating"), 130),
         );
       }
-      if (rhythmBeatFlash) {
-        rhythmBeatFlash.classList.remove("is-pulsing");
-        void rhythmBeatFlash.offsetWidth;
-        rhythmBeatFlash.classList.add("is-pulsing");
-      }
     }
 
     function updateWaveUI() {
@@ -1774,10 +1801,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (rhythmDialogueText) {
         typewriter.start(rhythmDialogueText, current.dialogue, 32, null, false);
       }
-      if (rhythmRedZone) {
-        rhythmRedZone.style.left = `${activeZoneStart}%`;
-        rhythmRedZone.style.width = `${activeZoneWidth}%`;
-      }
+
       if (rhythmWavePips) {
         const pips = rhythmWavePips.querySelectorAll(".wave-pip");
         pips.forEach((pip, idx) => {
@@ -1792,12 +1816,18 @@ document.addEventListener("DOMContentLoaded", () => {
       if (phase !== "rhythm") return;
       const current = waves[waveIndex];
       updateWaveUI();
-      arrowPercent = 0;
-      beatStepTriggered = current.cueTimes.map(() => false);
-      if (rhythmArrow) {
-        rhythmArrow.style.left = "0%";
-        rhythmArrow.classList.remove("is-in-zone");
+      scanPercent = 0;
+      const target = activeZoneStart + activeZoneWidth / 2;
+      const sidePeaks = [[14, 30, 84], [12, 48, 87], [17, 32, 79], [19, 41, 89]];
+      pendingPeaks = [...sidePeaks[waveIndex].slice(0, 2), target, sidePeaks[waveIndex][2]];
+      const irregularity = 1 - waveIndex * 0.2;
+      drawTrace(pendingPeaks, [1 - 0.22 * irregularity, 1 + 0.13 * irregularity,
+        1, 1 - 0.34 * irregularity]);
+      if (rhythmEcgWindow) {
+        rhythmEcgWindow.style.left = `${activeZoneStart - HIT_TOLERANCE}%`;
+        rhythmEcgWindow.style.width = `${activeZoneWidth + HIT_TOLERANCE * 2}%`;
       }
+      positionScan(0);
 
       isSweepActive = true;
       sweepStartTime = performance.now();
@@ -1808,21 +1838,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const elapsed = now - sweepStartTime;
         const t = Math.min(1, elapsed / current.duration);
 
-        current.cueTimes.forEach((cueT, idx) => {
-          if (!beatStepTriggered[idx] && t >= cueT) {
-            beatStepTriggered[idx] = true;
-            triggerHeartbeatPulse();
-          }
-        });
-
-        arrowPercent = current.curve(t);
-        if (rhythmArrow) {
-          rhythmArrow.style.left = `${arrowPercent}%`;
-          const inZone =
-            arrowPercent >= activeZoneStart - HIT_TOLERANCE &&
-            arrowPercent <= activeZoneStart + activeZoneWidth + HIT_TOLERANCE;
-          rhythmArrow.classList.toggle("is-in-zone", inZone);
+        scanPercent = current.curve(t);
+        if (pendingPeaks.length && scanPercent >= pendingPeaks[0]) {
+          do {
+            pendingPeaks.shift();
+          } while (pendingPeaks.length && scanPercent >= pendingPeaks[0]);
+          triggerHeartbeatPulse();
         }
+        positionScan(scanPercent);
 
         if (t >= 1) {
           isSweepActive = false;
@@ -1845,6 +1868,9 @@ document.addEventListener("DOMContentLoaded", () => {
         rafId = null;
       }
       if (rhythmHeartBtn) rhythmHeartBtn.disabled = true;
+      rhythmEcg?.classList.remove("is-hit", "is-in-window");
+      rhythmEcg?.classList.add(isPassed ? "is-stable" : "is-missed");
+      if (isPassed) drawTrace([16, 38, 60, 82], 0.64);
 
       if (isPassed) {
         playTone(659.25, 0.35, "triangle", 0.2, 1.15);
@@ -1932,9 +1958,7 @@ document.addEventListener("DOMContentLoaded", () => {
         rafId = null;
       }
 
-      const isHit =
-        arrowPercent >= activeZoneStart - HIT_TOLERANCE &&
-        arrowPercent <= activeZoneStart + activeZoneWidth + HIT_TOLERANCE;
+      const isHit = isInWindow(scanPercent);
 
       if (isHit) {
         playTone(587.33, 0.28, "triangle", 0.18, 1.1);
@@ -1949,15 +1973,8 @@ document.addEventListener("DOMContentLoaded", () => {
             ),
           );
         }
-        if (rhythmRedZone) {
-          rhythmRedZone.classList.add("is-zone-hit");
-          stepTimers.push(
-            setTimeout(
-              () => rhythmRedZone.classList.remove("is-zone-hit"),
-              360,
-            ),
-          );
-        }
+        rhythmEcg?.classList.add("is-hit");
+        stepTimers.push(setTimeout(() => rhythmEcg?.classList.remove("is-hit"), 360));
 
         waveIndex += 1;
         updateWaveUI();
@@ -1989,13 +2006,17 @@ document.addEventListener("DOMContentLoaded", () => {
         if (rhythmActionBtn) rhythmActionBtn.hidden = true;
         if (rhythmInstructionText) {
           rhythmInstructionText.textContent =
-            "請在箭頭指到紅色區域時點擊紅心或按空白鍵。";
+            "心電圖亮點進入淡綠色區域時，點擊紅心或按空白鍵。";
         }
 
         stepTimers.push(setTimeout(() => startWaveSweep(), 380));
       },
       stop() {
         isSweepActive = false;
+        rhythmEcg?.classList.remove("is-stable", "is-missed", "is-hit", "is-in-window");
+        drawTrace([], 0);
+        positionScan(0);
+        if (rhythmEcgWindow) rhythmEcgWindow.style.width = "0";
         clearStepTimers();
         if (rafId !== null) {
           cancelAnimationFrame(rafId);
